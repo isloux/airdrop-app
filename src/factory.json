@@ -1,0 +1,243 @@
+{
+  "abi": [
+      {
+          "inputs": [
+              {
+                  "internalType": "address",
+                  "name": "_feeTokenAddress",
+                  "type": "address"
+              },
+              {
+                  "internalType": "uint256",
+                  "name": "_fee",
+                  "type": "uint256"
+              },
+              {
+                  "internalType": "address",
+                  "name": "_treasury",
+                  "type": "address"
+              }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+      },
+      {
+          "inputs": [
+              {
+                  "internalType": "address",
+                  "name": "_tokenContract",
+                  "type": "address"
+              },
+              {
+                  "internalType": "uint128",
+                  "name": "_airdropTime",
+                  "type": "uint128"
+              },
+              {
+                  "internalType": "uint256",
+                  "name": "_registrationFee",
+                  "type": "uint256"
+              },
+              {
+                  "internalType": "string",
+                  "name": "_logoUrl",
+                  "type": "string"
+              }
+          ],
+          "name": "createNewAirdrop",
+          "outputs": [
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "inputs": [
+              {
+                  "internalType": "uint64",
+                  "name": "_index",
+                  "type": "uint64"
+              }
+          ],
+          "name": "getContract",
+          "outputs": [
+              {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+              }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [
+          ],
+          "name": "getFee",
+          "outputs": [
+              {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+              }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [
+          ],
+          "name": "getFeeToken",
+          "outputs": [
+              {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+              }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [
+          ],
+          "name": "getNumberOfAirdrops",
+          "outputs": [
+              {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+              }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [
+          ],
+          "name": "getTeasury",
+          "outputs": [
+              {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+              }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [
+          ],
+          "name": "owner",
+          "outputs": [
+              {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+              }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [
+          ],
+          "name": "removeAirdrop",
+          "outputs": [
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "inputs": [
+          ],
+          "name": "renounceOwnership",
+          "outputs": [
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "inputs": [
+              {
+                  "internalType": "address",
+                  "name": "newOwner",
+                  "type": "address"
+              }
+          ],
+          "name": "transferOwnership",
+          "outputs": [
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "inputs": [
+              {
+                  "internalType": "uint256",
+                  "name": "_fee",
+                  "type": "uint256"
+              }
+          ],
+          "name": "updateFee",
+          "outputs": [
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "anonymous": false,
+          "inputs": [
+              {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "newContractAddress",
+                  "type": "address"
+              }
+          ],
+          "name": "ContractDeployed",
+          "type": "event"
+      },
+      {
+          "anonymous": false,
+          "inputs": [
+              {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "previousOwner",
+                  "type": "address"
+              },
+              {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "newOwner",
+                  "type": "address"
+              }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+      },
+      {
+          "inputs": [
+              {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+              }
+          ],
+          "name": "OwnableInvalidOwner",
+          "type": "error"
+      },
+      {
+          "inputs": [
+              {
+                  "internalType": "address",
+                  "name": "account",
+                  "type": "address"
+              }
+          ],
+          "name": "OwnableUnauthorizedAccount",
+          "type": "error"
+      }
+  ]
+}
