@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/breadcrumb';
 import { ChevronRightIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
-import { Button, useColorMode, Stack, HStack } from '@chakra-ui/react';
+import { Button, useColorMode, Stack, HStack, Popover, PopoverTrigger, PopoverBody, PopoverContent } from '@chakra-ui/react';
 import { BrowserProvider } from 'ethers';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -24,7 +24,7 @@ const NavBarWeb3 = (props) => {
                             (account) => {
                                 buttonText.current = shortenAddress(account);
                                 provider.getNetwork().then((networkId) => {
-                                    props.parentCallback({ provider: provider, signer: signer, networkId: networkId.chainId, account: account });
+                                    props.parentCallback({ signer: signer, networkId: networkId.chainId, account: account });
                                 });
                             }
                         );
@@ -35,6 +35,14 @@ const NavBarWeb3 = (props) => {
             }
         }
         else alert("Please install a wallet extension");
+    }
+
+    const clearStorage = () => {
+        //localStorage.removeItem("provider");
+        //localStorage.removeItem("networkId");
+        //localStorage.removeItem("account");
+        buttonText.current = "Connect wallet";
+        props.parentCallback({ signer: null, networkId: 0, account: 0 });
     }
 
     return(
@@ -49,7 +57,16 @@ const NavBarWeb3 = (props) => {
                 </BreadcrumbItem>
             </Breadcrumb>
             <HStack>
-                <Button onClick={connectWallet}>{buttonText.current}</Button>
+                <Popover trigger="hover">
+                    <PopoverTrigger>
+                        <Button onClick={connectWallet}>{buttonText.current}</Button>
+                    </PopoverTrigger>
+                    <PopoverContent w="100%">
+                        <PopoverBody >
+                            <Button onClick={clearStorage}>Disconnect</Button>
+                        </PopoverBody>
+                    </PopoverContent>
+                </Popover>
                 <Button onClick={toggleColorMode}>
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 </Button>
