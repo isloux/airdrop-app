@@ -12,6 +12,7 @@ const Home = () => {
     const [signer, setSigner] = useState(null);
     const [networkId, setNetworkId] = useState(0);
     const [account, setAccount] = useState(0);
+    const [newAccount, setNewAccount] = useState(false);
     const [feeToken, setFeeToken] = useState(0);
     const [fee, setFee] = useState(0);
     const [factory, setFactory] = useState(null);
@@ -28,12 +29,33 @@ const Home = () => {
         }
     });
 
+    useEffect(() => {
+        if ((account.length > 0) && newAccount) {
+            console.log(signer);
+            localStorage.setItem('signer', JSON.stringify(signer));
+            localStorage.setItem('networkId', JSON.stringify(networkId));
+            localStorage.setItem('account', JSON.stringify(account));
+        }
+    }, [signer, networkId, account, newAccount]);
+
+    // Ceci était dans un useEffect à l'origine
+    const storedSigner = JSON.parse(localStorage.getItem('signer'));
+    const storedNetworkId = JSON.parse(localStorage.getItem('networkId'));
+    const storedAccount = JSON.parse(localStorage.getItem('account'));
+    if (storedSigner)
+        setSigner(storedSigner);
+    if (storedNetworkId)
+        setNetworkId(storedNetworkId);
+    if (storedAccount)
+        setAccount(storedAccount);  
+
     const { colorMode } = useColorMode();
 
     const callbackProvider = async (childData) => {
         setSigner(childData.signer);
         setNetworkId(childData.networkId);
         setAccount(childData.account);
+        setNewAccount(childData.newAccount);
 /*         const deployedFactoryAddress = "0x968aef219BBE9f03a41d4098aaa674D21B6bD8e2";
         const localFactory = new Contract(deployedFactoryAddress, factoryJson.abi, childData.signer);
         setFactory(localFactory);

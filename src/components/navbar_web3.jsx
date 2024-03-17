@@ -6,8 +6,9 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 const NavBarWeb3 = (props) => {
+    const defaultButtonText = "Connect wallet";
     const { colorMode, toggleColorMode } = useColorMode()
-    const buttonText = useRef("CONNECT WALLET");
+    const buttonText = useRef(defaultButtonText);
 
     const shortenAddress = (address) => {
         return `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
@@ -24,7 +25,7 @@ const NavBarWeb3 = (props) => {
                             (account) => {
                                 buttonText.current = shortenAddress(account);
                                 provider.getNetwork().then((networkId) => {
-                                    props.parentCallback({ signer: signer, networkId: networkId.chainId, account: account });
+                                    props.parentCallback({ signer: signer, networkId: networkId.chainId, account: account, newAccount: true });
                                 });
                             }
                         );
@@ -38,10 +39,10 @@ const NavBarWeb3 = (props) => {
     }
 
     const clearStorage = () => {
-        //localStorage.removeItem("provider");
-        //localStorage.removeItem("networkId");
-        //localStorage.removeItem("account");
-        buttonText.current = "Connect wallet";
+        localStorage.removeItem("provider");
+        localStorage.removeItem("networkId");
+        localStorage.removeItem("account");
+        buttonText.current = defaultButtonText;
         props.parentCallback({ signer: null, networkId: 0, account: 0 });
     }
 
