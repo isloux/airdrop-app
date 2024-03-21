@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Network from '../components/network';
 import Factory from '../components/Factory';
+import DateTimeForm from "../components/datetime";
+import '../components/datetime.css';
 
 const Home = () => {
     const [signer, setSigner] = useState(null);
@@ -39,15 +41,17 @@ const Home = () => {
     }, [signer, networkId, account, newAccount]);
 
     // Ceci était dans un useEffect à l'origine
-    const storedSigner = JSON.parse(localStorage.getItem('signer'));
-    const storedNetworkId = JSON.parse(localStorage.getItem('networkId'));
-    const storedAccount = JSON.parse(localStorage.getItem('account'));
-    if (storedSigner)
-        setSigner(storedSigner);
-    if (storedNetworkId)
-        setNetworkId(storedNetworkId);
-    if (storedAccount)
-        setAccount(storedAccount);  
+    useEffect(() => {
+        const storedSigner = JSON.parse(localStorage.getItem('signer'));
+        const storedNetworkId = JSON.parse(localStorage.getItem('networkId'));
+        const storedAccount = JSON.parse(localStorage.getItem('account'));
+        if (storedSigner)
+            setSigner(storedSigner);
+        if (storedNetworkId)
+            setNetworkId(storedNetworkId);
+        if (storedAccount)
+            setAccount(storedAccount);
+    }, []);
 
     const { colorMode } = useColorMode();
 
@@ -56,17 +60,17 @@ const Home = () => {
         setNetworkId(childData.networkId);
         setAccount(childData.account);
         setNewAccount(childData.newAccount);
-/*         const deployedFactoryAddress = "0x968aef219BBE9f03a41d4098aaa674D21B6bD8e2";
-        const localFactory = new Contract(deployedFactoryAddress, factoryJson.abi, childData.signer);
-        setFactory(localFactory);
-        const ft = await localFactory.getFeeToken();
-        setFeeToken(ft);
-        const f = await localFactory.getFee();
-        setFee(f); */
+        /*         const deployedFactoryAddress = "0x968aef219BBE9f03a41d4098aaa674D21B6bD8e2";
+                const localFactory = new Contract(deployedFactoryAddress, factoryJson.abi, childData.signer);
+                setFactory(localFactory);
+                const ft = await localFactory.getFeeToken();
+                setFeeToken(ft);
+                const f = await localFactory.getFee();
+                setFee(f); */
     }
 
     if (signer)
-        return(
+        return (
             <Flex height='100vh' flexDirection='column' bgSize='cover' bgPosition='center' bgRepeat='no-repeat' width="100%">
                 <NavBarWeb3 parentCallback={callbackProvider} />
                 <Container maxW='container.md' p={3}>
@@ -74,14 +78,16 @@ const Home = () => {
                         <Heading>BaldG airdrop factory</Heading>
                         <Center>
                             <Image boxSize="92px" src="/BaldG_192.png" alt="coin logo" />
-                        </Center>            <Box>pute</Box>
-                        <Network>{networkId}</Network>
+                        </Center>
+                        <div className="form-box">
+                            <DateTimeForm />
+                        </div>                        <Network>{networkId}</Network>
                         <Factory>{signer}</Factory>
                         <Button onClick={() => navigate("/create-airdrop")}>Create airdrop</Button>
                     </VStack>
                 </Container>
                 <SmallWithLogoLeft />
-            </Flex>  
+            </Flex>
         );
 
     return (
