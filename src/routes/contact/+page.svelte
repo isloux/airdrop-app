@@ -14,7 +14,12 @@
             Christophe Ramananjaona<br />2 rue des Sous-Chantres<br />71400
             Autun<br />France
         </p>
-        <p>Votre porteuille : {$storeAccount}</p>
+        
+        {#if $storeAccount.length > 0}
+            <p>Votre porteuille : {$storeAccount}</p>
+        {:else}
+            <p>Votre porteuille n'est pas connect&eacute;</p>
+        {/if}
     </div>
 </div>
 
