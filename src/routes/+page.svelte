@@ -5,23 +5,29 @@
     import Footer from "./Footer.svelte";
     import Spinner from "../components/Spinner.svelte";
     import {
-        storeAccount,
+        storeSigner,
         storeConnected,
         storeNetwork,
         storeEth,
-    } from "./store";    
-    //import factoryJson from "../factory.json";
+    } from "./store";
+    import factoryJson from "./factory.json";
 
     // Local state variables
     let factory = null;
     let isLoading = false;
+    let txHash = "";
+    let txHashRef = "";
 
     const callContract = async () => {
+        const address = "0xb568A9A4F52523Da9032f9542324040E8c808613";
+        const explorer = "https://sepolia.etherscan.io/tx/";
+        factory = new Contract(address, factoryJson.abi, $storeSigner);
         isLoading = true;
         try {
-            const tx = await factory.addPerson("Lapin", 89);
-            const hash = await tx.wait();
-            console.log(hash);
+            const tx = await factory.addPerson("Lapin", 36);
+            const receipt = await tx.wait();
+            txHash = receipt.hash;
+            txHashRef =  explorer + txHash;
         } catch {
             console.log("Transaction rejected");
         }
@@ -36,9 +42,16 @@
         <h1>Bonjour</h1>
         <p>Il s'agit d'une nouvelle application merveilleuse.</p>
         {#if $storeConnected}
-            <p>Connected: {$storeAccount}</p>
+            <p>Connected: {$storeSigner.address}</p>
             <p>Network: {$storeNetwork}</p>
             <p>Value: {formatEther($storeEth)}</p>
+            <button on:click={callContract}>Test</button>
+        {/if}
+        {#if isLoading}
+            <Spinner />
+        {/if}
+        {#if txHash.length > 0}
+            <p>Transaction hash: <a href={txHashRef} target="_blank">{txHash}</a></p>
         {/if}
     </div>
 </div>

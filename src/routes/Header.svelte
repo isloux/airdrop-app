@@ -3,11 +3,12 @@
     import { Contract, BrowserProvider } from "ethers";
     import { onMount } from "svelte";
     import {
-        storeAccount,
+        storeSigner,
         storeConnected,
         storeNetwork,
         storeEth,
     } from "./store";
+//    import factoryJson from "./factory.json";
 
     // Local state variables
     let factory = null;
@@ -15,7 +16,7 @@
     let buttonText;
 
     // Subscribe to the store
-    /*     const unsubscribe = storeAccount.subscribe((val) => {
+    /*     const unsubscribe = storeSigner.subscribe((val) => {
         account = val;
     }); */
 
@@ -28,7 +29,7 @@
         return `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
     };
 
-    if ($storeAccount.length > 0) buttonText = shortenAddress($storeAccount);
+    if ($storeSigner) buttonText = shortenAddress($storeSigner.address);
     else buttonText = "Connecter le portefeuille";
 
     const walletConnect = async (ethereum) => {
@@ -38,10 +39,12 @@
             storeNetwork.set(network.chainId);
             const accounts = await provider.send("eth_requestAccounts", []);
             const signer = await provider.getSigner();
-            const address = "0xb568A9A4F52523Da9032f9542324040E8c808613";
-            // factory = new Contract(address, factoryJson.abi, signer);
+            // const address = "0xb568A9A4F52523Da9032f9542324040E8c808613";
+            //factory = new Contract(address, factoryJson.abi, signer);
+            //const nAirdrops = await factory.getNumberOfAirdrops();
+            //console.log(nAirdrops);
             const account = await signer.getAddress();
-            storeAccount.set(account);
+            storeSigner.set(signer);
             buttonText = shortenAddress(account);
             const eth = await provider.getBalance(account);
             storeEth.set(eth);
@@ -69,7 +72,7 @@
                 if (accounts.length === 0) {
                     // MetaMask is locked or the user has not connected any accounts
                     console.log("Please connect to MetaMask.");
-                } else if (accounts[0] !== account) {
+                } else if (accounts[0] !== $storeSigner.address) {
                     const wConnect = walletConnect(ethereum);
                     storeConnected.set(wConnect);
                     // Update your application state or UI here
@@ -87,7 +90,7 @@
     const disconnect = () => {
         storeConnected.set(false);
         buttonText = "Connecter le portefeuille";
-        storeAccount.set("");
+        storeSigner.set(null);
     };
 
     const aboutAccount = (slug) => {
@@ -99,7 +102,7 @@
     <ul class="nav-bar">
         <li><a href="/">Maison</a></li>
         <li>
-            <a href="#" on:click={() => aboutAccount($storeAccount)}
+            <a href="#" on:click={() => aboutAccount($storeSigner.address)}
                 >&Agrave; propos de slug</a
             >
         </li>
