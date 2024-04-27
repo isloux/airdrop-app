@@ -10,11 +10,8 @@
 <div class="main">
     <div class="ui raised very padded text container segment">
         <h1>Contact</h1>
-        <p>
-            Christophe Ramananjaona<br />2 rue des Sous-Chantres<br />71400
-            Autun<br />France
-        </p>
-        
+        <p>Social networks</p>
+
         {#if $storeAccount.length > 0}
             <p>Votre porteuille : {$storeAccount}</p>
         {:else}
