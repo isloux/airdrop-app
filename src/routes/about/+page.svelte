@@ -10,7 +10,7 @@
     let eth = 0;
 </script>
 
-<Header bind:account bind:walletConnected bind:network bind:eth />
+<Header />
 
 <div class="main">
     <div class="ui raised very padded text container segment">Coucou, vous n'&ecirc;tes pas identifi&eacute;</div>

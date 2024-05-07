@@ -2,7 +2,8 @@
     import "semantic-ui-css/semantic.min.css";
     import Header from "../Header.svelte";
     import Footer from "../Footer.svelte";
-    import { storeAccount } from "../store";
+    import Card from "../../components/Card.svelte";
+    import { storeSigner } from "../store";
 </script>
 
 <Header />
@@ -12,17 +13,26 @@
         <h1>Contact</h1>
         <p>Social networks</p>
 
-        {#if $storeAccount.length > 0}
-            <p>Votre porteuille : {$storeAccount}</p>
+        {#if $storeSigner}
+            <p>Votre porteuille : {$storeSigner.address}</p>
         {:else}
             <p>Votre porteuille n'est pas connect&eacute;</p>
         {/if}
+    </div>
+    <div>
+        <Card
+            title="Orange"
+            description="3.99 €/kg"
+            image="https://www.pngall.com/wp-content/uploads/2016/05/Orange-Free-PNG-Image.png"
+        />
     </div>
 </div>
 
 <Footer />
 
 <style>
+    @import "../../styles.css";
+
     :global(html),
     :global(body) {
         margin: 0;

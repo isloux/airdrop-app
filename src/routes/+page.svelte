@@ -17,12 +17,13 @@
     let isLoading = false;
     let txHash = "";
     let txHashRef = "";
+    let nAirdrops = 0;
 
     const callContract = async () => {
-        const address = "0xb568A9A4F52523Da9032f9542324040E8c808613";
+        const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
         const explorer = "https://sepolia.etherscan.io/tx/";
         factory = new Contract(address, factoryJson.abi, $storeSigner);
-        isLoading = true;
+        /*         isLoading = true;
         try {
             const tx = await factory.addPerson("Lapin", 36);
             const receipt = await tx.wait();
@@ -31,7 +32,10 @@
         } catch {
             console.log("Transaction rejected");
         }
-        isLoading = false;
+        isLoading = false; */
+        nAirdrops = await factory.getNumberOfAirdrops();
+        nAirdrops = Number(nAirdrops);
+        console.log(nAirdrops);
     };
 </script>
 
@@ -51,7 +55,14 @@
             <Spinner />
         {/if}
         {#if txHash.length > 0}
-            <p>Transaction hash: <a href={txHashRef} target="_blank">{txHash}</a></p>
+            <p>
+                Transaction hash: <a href={txHashRef} target="_blank"
+                    >{txHash}</a
+                >
+            </p>
+        {/if}
+        {#if nAirdrops > 0}
+            <p>Number of airdrops: {nAirdrops}</p>
         {/if}
     </div>
 </div>

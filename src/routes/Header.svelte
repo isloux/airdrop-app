@@ -8,7 +8,7 @@
         storeNetwork,
         storeEth,
     } from "./store";
-//    import factoryJson from "./factory.json";
+    //    import factoryJson from "./factory.json";
 
     // Local state variables
     let factory = null;
@@ -94,7 +94,8 @@
     };
 
     const aboutAccount = (slug) => {
-        goto(`/about/${slug}`);
+        if (slug) goto(`/about/${slug.address}`);
+        else goto(`/about`);
     };
 </script>
 
@@ -102,7 +103,7 @@
     <ul class="nav-bar">
         <li><a href="/">Maison</a></li>
         <li>
-            <a href="#" on:click={() => aboutAccount($storeSigner.address)}
+            <a href="#" on:click={() => aboutAccount($storeSigner)}
                 >&Agrave; propos de slug</a
             >
         </li>

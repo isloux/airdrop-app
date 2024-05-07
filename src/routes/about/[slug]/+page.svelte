@@ -3,14 +3,9 @@
     import Header from "../../Header.svelte";
     import Footer from "../../Footer.svelte";
     export let data;
-
-    let walletConnected = false;
-    let account = "";
-    let network = 0;
-    let eth = 0;
 </script>
 
-<Header bind:account bind:walletConnected bind:network bind:eth />
+<Header />
 
 <div class="main">
     <div class="ui raised very padded text container segment">
