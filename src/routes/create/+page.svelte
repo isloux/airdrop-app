@@ -1,7 +1,8 @@
 <script>
-    import Footer from "../Footer.svelte";
+    import "semantic-ui-css/semantic.min.css";
     import Header from "../Header.svelte";
     import { storeSigner } from "../store";
+    import "../../styles.css";
 
     let tokenContract = "";
     let regitrationFee = 0;
@@ -22,31 +23,49 @@
         <h1>Create new airdrop</h1>
 
         {#if $storeSigner}
-            <form on:submit={handleSubmit}>
-                <label for="tokenContract">Token contract:</label>
-                <input
-                    type="text"
-                    id="tokenContract"
-                    bind:value={tokenContract}
-                />
+            <form on:submit={handleSubmit} class="ui form">
+                <div class="field">
+                    <label for="tokenContract">Token contract:</label>
+                    <input
+                        type="text"
+                        id="tokenContract"
+                        bind:value={tokenContract}
+                    />
+                </div>
 
-                <label for="regitrationFee">Registration fee:</label>
-                <input
-                    type="number"
-                    id="regitrationFee"
-                    bind:value={regitrationFee}
-                />
+                <div class="field">
+                    <label for="regitrationFee">Registration fee:</label>
+                    <input
+                        type="number"
+                        id="regitrationFee"
+                        bind:value={regitrationFee}
+                    />
+                </div>
 
-                <label for="airdropDate">Airdrop date:</label>
-                <input type="date" id="airdropDate" bind:value={airdropDate} />
+                <div class="field">
+                    <label for="airdropDate">Airdrop date:</label>
+                    <input
+                        type="date"
+                        id="airdropDate"
+                        bind:value={airdropDate}
+                    />
+                </div>
 
-                <label for="airdropTime">Airdrop time:</label>
-                <input type="time" id="airdropTime" bind:value={airdropTime} />
+                <div class="field">
+                    <label for="airdropTime">Airdrop time:</label>
+                    <input
+                        type="time"
+                        id="airdropTime"
+                        bind:value={airdropTime}
+                    />
+                </div>
 
-                <label for="text">Logo URL:</label>
-                <input type="URL" id="logoURL" bind:value={logoURL} />
+                <div class="field">
+                    <label for="text">Logo URL:</label>
+                    <input type="URL" id="logoURL" bind:value={logoURL} />
+                </div>
 
-                <button type="submit">Submit</button>
+                <button type="submit" class="ui submit">Submit</button>
             </form>
         {/if}
     </div>
@@ -65,13 +84,6 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-    }
-
-    .main {
-        background-color: blanchedalmond;
-        flex-grow: 1; /* This makes the main content area expand to fill the available space */
-        padding: 15px;
-        overflow-y: auto;
     }
 
     @font-face {

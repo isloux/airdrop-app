@@ -2,7 +2,6 @@
     import "semantic-ui-css/semantic.min.css";
     import { Contract, formatEther } from "ethers";
     import Header from "./Header.svelte";
-    import Footer from "./Footer.svelte";
     import Spinner from "../components/Spinner.svelte";
     import {
         storeSigner,
@@ -93,13 +92,6 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-    }
-
-    .main {
-        background-color: blanchedalmond;
-        flex-grow: 1; /* This makes the main content area expand to fill the available space */
-        padding: 15px;
-        overflow-y: auto;
     }
 
     @font-face {

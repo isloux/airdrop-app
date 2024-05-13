@@ -1,7 +1,6 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
     import Header from "../../Header.svelte";
-    import Footer from "../../Footer.svelte";
     export let data;
 </script>
 

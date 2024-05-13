@@ -1,7 +1,6 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
     import Header from "../Header.svelte";
-    import Footer from "../Footer.svelte";
     import Card from "../../components/Card.svelte";
     import { storeSigner } from "../store";
 </script>
@@ -43,13 +42,6 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-    }
-
-    .main {
-        background-color: blanchedalmond;
-        flex-grow: 1; /* This makes the main content area expand to fill the available space */
-        padding: 15px;
-        overflow-y: auto;
     }
 
     @font-face {
