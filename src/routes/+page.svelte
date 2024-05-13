@@ -18,8 +18,12 @@
     let txHash = "";
     let txHashRef = "";
     let nAirdrops = 0;
+    let connected;
+    storeConnected.subscribe((value) => {
+        connected = value;
+    });
 
-    const callContract = async () => {
+    const callFactory = async () => {
         const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
         const explorer = "https://sepolia.etherscan.io/tx/";
         factory = new Contract(address, factoryJson.abi, $storeSigner);
@@ -37,19 +41,28 @@
         nAirdrops = Number(nAirdrops);
         console.log(nAirdrops);
     };
+
+    const handleUpdateParent = () => {
+        // Call a script in the parent component
+        callFactory();
+    };
+
+    const createAirdrop = async () => {
+
+    }
 </script>
 
-<Header />
+<Header on:updateParent={handleUpdateParent} />
 
 <div class="main">
     <div class="ui raised very padded text container segment">
-        <h1>Bonjour</h1>
-        <p>Il s'agit d'une nouvelle application merveilleuse.</p>
-        {#if $storeConnected}
-            <p>Connected: {$storeSigner.address}</p>
+        <h1>BaldG Airdrop</h1>
+        <h2>Create an airdrop for any token on BSC</h2>
+        {#if connected}
+            <p>Connected</p>
             <p>Network: {$storeNetwork}</p>
             <p>Value: {formatEther($storeEth)}</p>
-            <button on:click={callContract}>Test</button>
+            <a href="/create"><button>Create airdrop</button></a>
         {/if}
         {#if isLoading}
             <Spinner />

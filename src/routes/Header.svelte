@@ -1,7 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
     import { Contract, BrowserProvider } from "ethers";
-    import { onMount } from "svelte";
+    import { onMount, createEventDispatcher } from "svelte";
     import {
         storeSigner,
         storeConnected,
@@ -14,6 +14,12 @@
     let factory = null;
     let isLoading = false;
     let buttonText;
+
+    // Parent callback function
+    const dispatch = createEventDispatcher();
+    const handleClick = () => {
+        dispatch('updateParent');
+    }
 
     // Subscribe to the store
     /*     const unsubscribe = storeSigner.subscribe((val) => {
@@ -60,6 +66,7 @@
         if (ethereum) {
             const wConnect = await walletConnect(ethereum);
             storeConnected.set(wConnect);
+            handleClick();
         } else {
             console.log("Ethereum object not found. Please install MetaMask.");
         }
