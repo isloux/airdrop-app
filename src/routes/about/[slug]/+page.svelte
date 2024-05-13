@@ -14,8 +14,6 @@
     </div>
 </div>
 
-<Footer />
-
 <style>
     :global(html),
     :global(body) {

@@ -109,9 +109,10 @@
 <div class="header">
     <ul class="nav-bar">
         <li><a href="/">Maison</a></li>
+        <li><a href="/create">Create Airdrop</a></li>
         <li>
             <a href="#" on:click={() => aboutAccount($storeSigner)}
-                >&Agrave; propos de slug</a
+                >Dashboard</a
             >
         </li>
         <li><a href="/contact">Contact</a></li>

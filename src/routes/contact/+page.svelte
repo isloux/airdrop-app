@@ -28,8 +28,6 @@
     </div>
 </div>
 
-<Footer />
-
 <style>
     @import "../../styles.css";
 
@@ -57,8 +55,8 @@
     @font-face {
         font-family: "Candara";
         src:
-            url("../lib/font/Candara.ttf") format("truetype"),
-            url("../lib/font/Candarai.ttf") format("truetype");
+            url("../../lib/font/Candara.ttf") format("truetype"),
+            url("../../lib/font/Candarai.ttf") format("truetype");
     }
 
     .ui,
