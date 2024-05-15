@@ -1,19 +1,51 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
+    import { Contract } from "ethers";
+    import Spinner from "../../components/Spinner.svelte";
     import Header from "../Header.svelte";
     import { storeSigner } from "../store";
+    import factoryJson from "../factory.json";
     import "../../styles.css";
 
+    let isLoading = false;
     let tokenContract = "";
     let regitrationFee = 0;
     let airdropDate = "";
     let airdropTime = "";
     let logoURL = "";
+    let txHash = "";
+    let txHashRef = "";
 
-    function handleSubmit() {
+    const handleSubmit = async () => {
+        const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
+        const factory = new Contract(address, factoryJson.abi, $storeSigner);
         // Form submission logic here
-        console.log("Form submitted!");
-    }
+        console.log(
+            `Form submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
+        );
+        const dateString = airdropDate + "T" + airdropTime + ":00";
+        const date = new Date(dateString);
+        const unixTime = Math.floor(date.getTime() / 1000);
+        console.log(unixTime); // This is the local time
+        isLoading = true;
+        try {
+            const tx = await factory.createNewAirdrop(
+                tokenContract,
+                unixTime,
+                regitrationFee,
+                logoURL,
+            ); // I need to pay the factory fee by approving the fee
+            const receipt = await tx.wait();
+            txHash = receipt.hash;
+            txHashRef = explorer + txHash;
+        } catch(error) {
+            console.log(`Transaction rejected: ${error}`);
+        }
+        isLoading = false;
+        var nAirdrops = await factory.getNumberOfAirdrops();
+        nAirdrops = Number(nAirdrops);
+        console.log(nAirdrops);
+    };
 </script>
 
 <Header />
@@ -67,6 +99,16 @@
 
                 <button type="submit" class="ui submit">Submit</button>
             </form>
+        {/if}
+        {#if isLoading}
+            <Spinner />
+        {/if}
+        {#if txHash.length > 0}
+            <p>
+                Transaction hash: <a href={txHashRef} target="_blank"
+                    >{txHash}</a
+                >
+            </p>
         {/if}
     </div>
 </div>

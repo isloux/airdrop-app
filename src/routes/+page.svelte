@@ -2,7 +2,6 @@
     import "semantic-ui-css/semantic.min.css";
     import { Contract, formatEther } from "ethers";
     import Header from "./Header.svelte";
-    import Spinner from "../components/Spinner.svelte";
     import {
         storeSigner,
         storeConnected,
@@ -13,10 +12,10 @@
 
     // Local state variables
     let factory = null;
-    let isLoading = false;
-    let txHash = "";
-    let txHashRef = "";
     let nAirdrops = 0;
+    let fee;
+    let feeToken;
+    let feeTokenURL;
     let connected;
     storeConnected.subscribe((value) => {
         connected = value;
@@ -24,21 +23,15 @@
 
     const callFactory = async () => {
         const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
-        const explorer = "https://sepolia.etherscan.io/tx/";
+        const explorer = "https://sepolia.etherscan.io/token/";
         factory = new Contract(address, factoryJson.abi, $storeSigner);
-        /*         isLoading = true;
-        try {
-            const tx = await factory.addPerson("Lapin", 36);
-            const receipt = await tx.wait();
-            txHash = receipt.hash;
-            txHashRef =  explorer + txHash;
-        } catch {
-            console.log("Transaction rejected");
-        }
-        isLoading = false; */
         nAirdrops = await factory.getNumberOfAirdrops();
         nAirdrops = Number(nAirdrops);
         console.log(nAirdrops);
+        fee = await factory.getFee();
+        fee = formatEther(fee);
+        feeToken = await factory.getFeeToken();
+        feeTokenURL = explorer + feeToken;
     };
 
     const handleUpdateParent = () => {
@@ -46,9 +39,7 @@
         callFactory();
     };
 
-    const createAirdrop = async () => {
-
-    }
+    const createAirdrop = async () => {};
 </script>
 
 <Header on:updateParent={handleUpdateParent} />
@@ -63,23 +54,23 @@
             <p>Value: {formatEther($storeEth)}</p>
             <a href="/create"><button>Create airdrop</button></a>
         {/if}
-        {#if isLoading}
-            <Spinner />
-        {/if}
-        {#if txHash.length > 0}
-            <p>
-                Transaction hash: <a href={txHashRef} target="_blank"
-                    >{txHash}</a
-                >
-            </p>
-        {/if}
         {#if nAirdrops > 0}
             <p>Number of airdrops: {nAirdrops}</p>
+        {/if}
+        {#if fee}
+            <p>Factory fee: {fee}</p>
+        {/if}
+        {#if feeToken}
+            <p>
+                Fee token: <a href={feeTokenURL} target="_blank">{feeToken}</a>
+            </p>
         {/if}
     </div>
 </div>
 
 <style>
+    @import "../styles.css";
+
     :global(html),
     :global(body) {
         margin: 0;
