@@ -8,7 +8,7 @@
         storeNetwork,
         storeEth,
     } from "../store";
-    import factoryJson from "./factory.json";
+    import factoryJson from "./airdrop/factory.json";
 
     // Local state variables
     let factory = null;
