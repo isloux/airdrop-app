@@ -1,13 +1,13 @@
 <script>
     import { goto } from "$app/navigation";
-    import { Contract, BrowserProvider } from "ethers";
+    import { BrowserProvider } from "ethers";
     import { onMount, createEventDispatcher } from "svelte";
     import {
         storeSigner,
         storeConnected,
         storeNetwork,
         storeEth,
-    } from "./store";
+    } from "../store";
     //    import factoryJson from "./factory.json";
 
     // Local state variables
@@ -101,21 +101,23 @@
     };
 
     const aboutAccount = (slug) => {
-        if (slug) goto(`/about/${slug.address}`);
-        else goto(`/about`);
+        if (slug) goto(`/app/about/${slug.address}`);
+        else goto(`/app/about`);
     };
 </script>
 
 <div class="header">
     <ul class="nav-bar">
-        <li><a href="/">Maison</a></li>
-        <li><a href="/create">Create Airdrop</a></li>
+        <li><a href="/">Website</a></li>
+        <li><a href="/app">Home</a></li>
+        <li><a href="/app/airdrop/create">Create Airdrop</a></li>
         <li>
             <a href="#" on:click={() => aboutAccount($storeSigner)}
                 >Dashboard</a
             >
         </li>
-        <li><a href="/contact">Contact</a></li>
+        <li><a href="/app/airdrop/contact">Contact</a></li>
+        <li><a href="/app/airdrop/essai">Coucou</a></li>
     </ul>
     <div class="right-side">
         {#if $storeConnected}

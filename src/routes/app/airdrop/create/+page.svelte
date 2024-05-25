@@ -1,11 +1,9 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
     import { Contract } from "ethers";
-    import Spinner from "../../components/Spinner.svelte";
-    import Header from "../Header.svelte";
-    import { storeSigner } from "../store";
-    import factoryJson from "../factory.json";
-    import "../../styles.css";
+    import Spinner from "../../../../components/Spinner.svelte";
+    import { storeSigner } from "../../../store";
+    import factoryJson from "../../factory.json";
 
     let isLoading = false;
     let tokenContract = "";
@@ -18,6 +16,7 @@
 
     const handleSubmit = async () => {
         const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
+        const explorer = "https://sepolia.etherscan.io/tx/";
         const factory = new Contract(address, factoryJson.abi, $storeSigner);
         // Form submission logic here
         console.log(
@@ -47,8 +46,6 @@
         console.log(nAirdrops);
     };
 </script>
-
-<Header />
 
 <div class="main">
     <div class="ui raised very padded text container segment">
@@ -114,38 +111,6 @@
 </div>
 
 <style>
-    :global(html),
-    :global(body) {
-        margin: 0;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    :global(#svelte) {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    @font-face {
-        font-family: "Candara";
-        src:
-            url("../../lib/font/Candara.ttf") format("truetype"),
-            url("../../lib/font/Candarai.ttf") format("truetype");
-    }
-
-    .ui,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p {
-        font-family: "Candara", sans-serif !important;
-    }
-
     /* Form styles */
 
     form {
