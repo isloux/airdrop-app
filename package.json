@@ -21,6 +21,7 @@
 	"type": "module",
 	"dependencies": {
 		"ethers": "^6.11.1",
-		"semantic-ui-css": "^2.5.0"
+		"semantic-ui-css": "^2.5.0",
+		"svelte-routing": "^2.13.0"
 	}
 }

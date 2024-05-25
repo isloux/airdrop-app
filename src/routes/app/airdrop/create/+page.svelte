@@ -1,5 +1,6 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
+    import { navigate } from "svelte-routing";
     import { Contract, formatEther, parseEther } from "ethers";
     import Spinner from "../../../../components/Spinner.svelte";
     import { storeSigner } from "../../../store";
@@ -21,7 +22,6 @@
         const address = "0x867BfAD7b420c0eddE667dD92d06aE1efcd65f81";
         const explorer = "https://sepolia.etherscan.io/tx/";
         const feeContract = new Contract(address, tokenJson.abi, $storeSigner);
-        console.log(feeContract);
         // Form submission logic here
         console.log(
             `Form submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
@@ -73,6 +73,7 @@
         var nAirdrops = await factory.getNumberOfAirdrops();
         nAirdrops = Number(nAirdrops);
         console.log(nAirdrops);
+        navigate("/app");
     };
 </script>
 
