@@ -62,7 +62,7 @@
             </p>
         {/if}
         {#if nAirdrops > 0}
-            <p>Number of airdrops: {nAirdrops}</p>
+            <p>Number of open airdrops: {nAirdrops}</p>
         {/if}
         <p>
             {#if fee}

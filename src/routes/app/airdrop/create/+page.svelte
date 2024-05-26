@@ -1,6 +1,6 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
-    import { Contract, formatEther } from "ethers";
+    import { Contract, formatEther, parseEther } from "ethers";
     import Spinner from "../../../../components/Spinner.svelte";
     import {
         storeSigner,
@@ -60,6 +60,7 @@
         const date = new Date(dateString);
         const unixTime = Math.floor(date.getTime() / 1000);
         console.log(unixTime); // This is the local time
+        regitrationFee = parseEther(regitrationFee);
         isLoading = true;
         try {
             const tx = await factory.createNewAirdrop(
@@ -155,6 +156,7 @@
                 <button on:click={handleSubmit}>Submit</button>
             {:else}
                 <h2>Airdrop creation successfull!</h2>
+                <p>Send the amount of token to be airdropped to 0xXXXX</p>
             {/if}
         {/if}
         {#if isLoading}

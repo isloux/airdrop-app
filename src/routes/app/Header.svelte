@@ -108,16 +108,16 @@
 
 <div class="header">
     <ul class="nav-bar">
-        <li><a href="/">Website</a></li>
+        <li><a href="/">General information</a></li>
         <li><a href="/app">Home</a></li>
         <li><a href="/app/airdrop/create">Create Airdrop</a></li>
+        <li><a href="/app/airdrop/participate">Register for Airdrop</a></li>
         <li>
             <a href="#" on:click={() => aboutAccount($storeSigner)}
                 >Dashboard</a
             >
         </li>
         <li><a href="/app/airdrop/contact">Contact</a></li>
-        <li><a href="/app/airdrop/essai">Coucou</a></li>
     </ul>
     <div class="right-side">
         {#if $storeConnected}
