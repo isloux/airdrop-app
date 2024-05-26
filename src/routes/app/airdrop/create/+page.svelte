@@ -1,11 +1,15 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
-    import { navigate } from "svelte-routing";
-    import { Contract, formatEther, parseEther } from "ethers";
+    import { Contract, formatEther } from "ethers";
     import Spinner from "../../../../components/Spinner.svelte";
-    import { storeSigner } from "../../../store";
-    import factoryJson from "../factory.json";
-    import tokenJson from "./token.json";
+    import {
+        storeSigner,
+        storeFee,
+        storeFeeToken,
+        storeFeeTokenSymbol,
+    } from "../../../store";
+    import factoryJson from "../Factory.json";
+    import tokenJson from "./ERC20.json";
 
     let isLoading = false;
     let tokenContract = "";
@@ -16,26 +20,28 @@
     let txHash = "";
     let txHashRef = "";
     let approved = false;
+    let submitted = false;
 
     const approve = async () => {
-        const fee = parseEther("0.000000000000000001");
-        const address = "0x867BfAD7b420c0eddE667dD92d06aE1efcd65f81";
+        const factoryAddress = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
         const explorer = "https://sepolia.etherscan.io/tx/";
-        const feeContract = new Contract(address, tokenJson.abi, $storeSigner);
+        console.log($storeFeeToken, $storeFee);
+        const feeContract = new Contract(
+            $storeFeeToken,
+            tokenJson.abi,
+            $storeSigner,
+        );
         // Form submission logic here
         console.log(
             `Form submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
         );
-        const dateString = airdropDate + "T" + airdropTime + ":00";
-        const date = new Date(dateString);
-        const unixTime = Math.floor(date.getTime() / 1000);
-        console.log(unixTime); // This is the local time
         isLoading = true;
         try {
-            const tx = await feeContract.increaseAllowance($storeSigner.address, fee);
+            const tx = await feeContract.approve(factoryAddress, $storeFee);
             const receipt = await tx.wait();
             txHash = receipt.hash;
             txHashRef = explorer + txHash;
+            approved = true;
         } catch (error) {
             console.log(`Transaction rejected: ${error}`);
         }
@@ -48,7 +54,7 @@
         const factory = new Contract(address, factoryJson.abi, $storeSigner);
         // Form submission logic here
         console.log(
-            `Form submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
+            `Airdrop creation submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
         );
         const dateString = airdropDate + "T" + airdropTime + ":00";
         const date = new Date(dateString);
@@ -65,7 +71,8 @@
             const receipt = await tx.wait();
             txHash = receipt.hash;
             txHashRef = explorer + txHash;
-            approved = true;
+            approved = false;
+            submitted = true;
         } catch (error) {
             console.log(`Transaction rejected: ${error}`);
         }
@@ -73,7 +80,6 @@
         var nAirdrops = await factory.getNumberOfAirdrops();
         nAirdrops = Number(nAirdrops);
         console.log(nAirdrops);
-        navigate("/app");
     };
 </script>
 
@@ -82,7 +88,7 @@
         <h1>Create new airdrop</h1>
 
         {#if $storeSigner}
-            {#if !approved}
+            {#if !approved && !submitted}
                 <form on:submit={approve} class="ui form">
                     <div class="field">
                         <label for="tokenContract">Token contract:</label>
@@ -125,11 +131,30 @@
                         <input type="URL" id="logoURL" bind:value={logoURL} />
                     </div>
 
-                    <button type="submit" class="ui submit">Submit</button>
+                    <button type="submit" class="ui submit"
+                        >Approve expense of {formatEther($storeFee)}
+                        {$storeFeeTokenSymbol}</button
+                    >
                 </form>
-            {:else}
+            {:else if approved}
                 <p>Fee allowance approved.</p>
-                <button on:click={handleSubmit}></button>
+                <h2>Airdrop summary</h2>
+                <table>
+                    <thead><tr><th>Key</th><th>Value</th></tr></thead>
+                    <tbody
+                        ><tr><th>Token address</th><th>{tokenContract}</th></tr>
+                        <tr><th>Date</th><th>{airdropDate}</th></tr>
+                        <tr><th>Time</th><th>{airdropTime}</th></tr>
+                        <tr><th>Logo location</th><th>{logoURL}</th></tr>
+                        <tr
+                            ><th>Registration fee</th><th>{regitrationFee}</th
+                            ></tr
+                        ></tbody
+                    >
+                </table>
+                <button on:click={handleSubmit}>Submit</button>
+            {:else}
+                <h2>Airdrop creation successfull!</h2>
             {/if}
         {/if}
         {#if isLoading}

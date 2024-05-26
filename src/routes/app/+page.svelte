@@ -7,8 +7,12 @@
         storeConnected,
         storeNetwork,
         storeEth,
+        storeFee,
+        storeFeeToken,
+        storeFeeTokenSymbol,
     } from "../store";
-    import factoryJson from "./airdrop/factory.json";
+    import factoryJson from "./airdrop/Factory.json";
+    import tokenJson from "./airdrop/create/ERC20.json";
 
     // Local state variables
     let factory = null;
@@ -29,8 +33,13 @@
         nAirdrops = Number(nAirdrops);
         console.log(nAirdrops);
         fee = await factory.getFee();
+        storeFee.set(fee);
         fee = formatEther(fee);
         feeToken = await factory.getFeeToken();
+        storeFeeToken.set(feeToken);
+        const feeContract = new Contract(feeToken, tokenJson.abi, $storeSigner);
+        const symbol = await feeContract.symbol();
+        storeFeeTokenSymbol.set(symbol);
         feeTokenURL = explorer + feeToken;
     };
 </script>
@@ -47,7 +56,10 @@
                 Network: {$storeNetwork}
             </p>
             <p>Value: {formatEther($storeEth)}</p>
-            <p><a href="/app/airdrop/create"><button>Create airdrop</button></a></p>
+            <p>
+                <a href="/app/airdrop/create"><button>Create airdrop</button></a
+                >
+            </p>
         {/if}
         {#if nAirdrops > 0}
             <p>Number of airdrops: {nAirdrops}</p>
@@ -61,6 +73,12 @@
                 Fee token: <a href={feeTokenURL} target="_blank">{feeToken}</a>
             {/if}
         </p>
+        {#if !$storeFee}
+            <p>
+                Le truc n'est pas mis &agrave; jour lorsqu'on se connecte sur
+                une autre page. Il va falloir corriger cela !
+            </p>
+        {/if}
     </div>
 </div>
 
