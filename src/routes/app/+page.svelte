@@ -13,6 +13,7 @@
     } from "../store";
     import factoryJson from "./airdrop/Factory.json";
     import tokenJson from "./airdrop/create/ERC20.json";
+    import { onMount } from "svelte";
 
     // Local state variables
     let factory = null;
@@ -42,6 +43,10 @@
         storeFeeTokenSymbol.set(symbol);
         feeTokenURL = explorer + feeToken;
     };
+
+    onMount(async () => {
+        if ($storeSigner && !fee) await getDatabaseInfo();
+    });
 </script>
 
 <Header on:updateParent={getDatabaseInfo} />
@@ -73,12 +78,6 @@
                 Fee token: <a href={feeTokenURL} target="_blank">{feeToken}</a>
             {/if}
         </p>
-        {#if !$storeFee}
-            <p>
-                Le truc n'est pas mis &agrave; jour lorsqu'on se connecte sur
-                une autre page. Il va falloir corriger cela !
-            </p>
-        {/if}
     </div>
 </div>
 
