@@ -19,13 +19,15 @@
 <div class="card">
     <img src={image} alt={title} />
     <h2>{title}</h2>
-    <p>
-        Address: <a href={explorer + address} target="_blank"
-            >{shortenAddress(address)}</a
-        ><br />
-        Balance: {balance}<br />
-        Fee: {fee}<br />
-        Date and time: {time}
-    </p>
+    <ul>
+        <li>
+            Address: <a href={explorer + address} target="_blank"
+                >{shortenAddress(address)}</a
+            >
+        </li>
+        <li>Balance: {balance}</li>
+        <li>Fee: {fee}</li>
+        <li>Date and time: {time}</li>
+    </ul>
     <p align="center"><button on:click={register}>Register</button></p>
 </div>
