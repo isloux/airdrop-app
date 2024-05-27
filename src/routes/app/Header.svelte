@@ -18,8 +18,8 @@
     // Parent callback function
     const dispatch = createEventDispatcher();
     const handleClick = () => {
-        dispatch('updateParent');
-    }
+        dispatch("updateParent");
+    };
 
     // Subscribe to the store
     /*     const unsubscribe = storeSigner.subscribe((val) => {
@@ -113,8 +113,7 @@
         <li><a href="/app/airdrop/create">Create Airdrop</a></li>
         <li><a href="/app/airdrop/participate">Register for Airdrop</a></li>
         <li>
-            <a href="#" on:click={() => aboutAccount($storeSigner)}
-                >Dashboard</a
+            <a href="#" on:click={() => aboutAccount($storeSigner)}>Dashboard</a
             >
         </li>
         <li><a href="/app/airdrop/contact">Contact</a></li>

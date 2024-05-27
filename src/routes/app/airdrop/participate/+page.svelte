@@ -7,6 +7,7 @@
     //import tokenJson from "../create/ERC20.json";
     import { storeSigner } from "../../../store";
     import Card from "../../../../components/Card.svelte";
+    import Wrong from "../../../../components/Wrong.svelte";
 
     let nAirdrops;
     let addresses = [];
@@ -23,14 +24,8 @@
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     };
 
-    onMount(async () => {
+    const getCards = async (provider) => {
         const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
-        var provider;
-        if ($storeSigner) provider = $storeSigner;
-        else
-            provider = getDefaultProvider(
-                "https://ethereum-sepolia-rpc.publicnode.com",
-            );
         const factory = new Contract(address, factoryJson.abi, provider);
         nAirdrops = await factory.getNumberOfAirdrops();
 
@@ -46,15 +41,30 @@
             const airdropTime = await airdropContract.getAirdropTime();
             // +get the logo
             // +get the token name
+            const owner = await airdropContract.owner();
+            var isOwner = false;
+            if ($storeSigner)
+                if (owner === $storeSigner.address) isOwner = true; // Ceci n'est pas mis à jour lors de la connexion avec MetaMask
             addresses.push({
                 name: "Orange",
                 full: cAddress,
                 balance: balance,
                 fee: formatEther(registrationFee),
                 time: unixToHuman(Number(airdropTime)),
+                owner: isOwner,
             });
         }
         addresses = addresses;
+    };
+
+    onMount(async () => {
+        var provider;
+        if ($storeSigner) provider = $storeSigner;
+        else
+            provider = getDefaultProvider(
+                "https://ethereum-sepolia-rpc.publicnode.com",
+            );
+        await getCards(provider);
     });
 </script>
 
@@ -70,9 +80,11 @@
                     balance={address.balance}
                     fee={address.fee}
                     time={address.time}
+                    owner={address.owner}
                     image="https://www.pngall.com/wp-content/uploads/2016/05/Orange-Free-PNG-Image.png"
                 />
             {/each}
         </p>
+        <Wrong />
     </div>
 </div>

@@ -25,6 +25,17 @@
   color: #666;
 }
 
+.warning {
+  font-size: 24pt;
+  color: rgb(250, 45, 38);
+  font-weight: bold;
+  text-align: center;
+  background-color: rgb(81, 87, 168);
+  border: 1px solid sienna;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .main {
   background-color: blanchedalmond;
   flex-grow: 1;

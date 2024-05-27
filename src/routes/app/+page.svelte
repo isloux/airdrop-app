@@ -1,6 +1,6 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
-    import { Contract, formatEther } from "ethers";
+    import { Contract, UnmanagedSubscriber, formatEther } from "ethers";
     import Header from "./Header.svelte";
     import {
         storeSigner,
@@ -13,7 +13,8 @@
     } from "../store";
     import factoryJson from "./airdrop/Factory.json";
     import tokenJson from "./airdrop/create/ERC20.json";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
+    import Wrong from "../../components/Wrong.svelte";
 
     // Local state variables
     let factory = null;
@@ -26,13 +27,16 @@
         connected = value;
     });
 
+    const unsubscribe = storeConnected.subscribe((value) => {
+        connected = value;
+    });
+
     const getDatabaseInfo = async () => {
         const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
         const explorer = "https://sepolia.etherscan.io/token/";
         factory = new Contract(address, factoryJson.abi, $storeSigner);
         nAirdrops = await factory.getNumberOfAirdrops();
         nAirdrops = Number(nAirdrops);
-        console.log(nAirdrops);
         fee = await factory.getFee();
         storeFee.set(fee);
         fee = formatEther(fee);
@@ -46,6 +50,10 @@
 
     onMount(async () => {
         if ($storeSigner && !fee) await getDatabaseInfo();
+    });
+
+    onDestroy(() => {
+        unsubscribe();
     });
 </script>
 
@@ -78,6 +86,7 @@
                 Fee token: <a href={feeTokenURL} target="_blank">{feeToken}</a>
             {/if}
         </p>
+        <Wrong />
     </div>
 </div>
 

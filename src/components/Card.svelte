@@ -5,6 +5,7 @@
     export let fee;
     export let time;
     export let image;
+    export let owner;
     const explorer = "https://sepolia.etherscan.io/address/";
 
     const shortenAddress = (address) => {
@@ -28,6 +29,7 @@
         <li>Balance: {balance}</li>
         <li>Fee: {fee}</li>
         <li>Date and time: {time}</li>
+        <li>Owner: {owner}</li>
     </ul>
     <p align="center"><button on:click={register}>Register</button></p>
 </div>

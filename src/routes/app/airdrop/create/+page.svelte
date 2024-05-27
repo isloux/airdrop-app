@@ -10,6 +10,7 @@
     } from "../../../store";
     import factoryJson from "../Factory.json";
     import tokenJson from "./ERC20.json";
+    import Wrong from "../../../../components/Wrong.svelte";
 
     let isLoading = false;
     let tokenContract = "";
@@ -169,6 +170,7 @@
                 >
             </p>
         {/if}
+        <Wrong />
     </div>
 </div>
 
