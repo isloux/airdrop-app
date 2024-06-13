@@ -36,17 +36,25 @@
         console.log(
             `Form submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
         );
-        isLoading = true;
-        try {
-            const tx = await feeContract.approve(factoryAddress, $storeFee);
-            const receipt = await tx.wait();
-            txHash = receipt.hash;
-            txHashRef = explorer + txHash;
-            approved = true;
-        } catch (error) {
-            console.log(`Transaction rejected: ${error}`);
-        }
-        isLoading = false;
+
+        const approvedAmount = await feeContract.allowance(
+            $storeSigner,
+            factoryAddress,
+        );
+        console.log(approvedAmount, $storeFee);
+        if (Number(approvedAmount) < Number($storeFee)) {
+            isLoading = true;
+            try {
+                const tx = await feeContract.approve(factoryAddress, $storeFee);
+                const receipt = await tx.wait();
+                txHash = receipt.hash;
+                txHashRef = explorer + txHash;
+                approved = true;
+            } catch (error) {
+                console.log(`Transaction rejected: ${error}`);
+            }
+            isLoading = false;
+        } else approved = true;
     };
 
     const handleSubmit = async () => {
@@ -54,14 +62,14 @@
         const explorer = "https://sepolia.etherscan.io/tx/";
         const factory = new Contract(address, factoryJson.abi, $storeSigner);
         // Form submission logic here
-        console.log(
-            `Airdrop creation submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
-        );
         const dateString = airdropDate + "T" + airdropTime + ":00";
         const date = new Date(dateString);
         const unixTime = Math.floor(date.getTime() / 1000);
         console.log(unixTime); // This is the local time
         const regitrationFeeWei = parseEther(regitrationFee.toString());
+        console.log(
+            `Airdrop creation submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}, ${regitrationFeeWei}, ${logoURL}!`,
+        );
         isLoading = true;
         try {
             const tx = await factory.createNewAirdrop(
@@ -90,11 +98,11 @@
         <h1>Create new airdrop</h1>
 
         {#if txHash.length > 0}
-        <p>
-            Transaction hash: <a href={txHashRef} target="_blank"
-                >{txHash}</a
-            >
-        </p>
+            <p>
+                Transaction hash: <a href={txHashRef} target="_blank"
+                    >{txHash}</a
+                >
+            </p>
         {/if}
         {#if $storeSigner}
             {#if !approved && !submitted}
@@ -140,7 +148,7 @@
                         <input type="URL" id="logoURL" bind:value={logoURL} />
                     </div>
 
-                    <button type="submit" class="ui submit"
+                    <button type="submit" class="ui yellow button"
                         >Approve expense of {formatEther($storeFee)}
                         {$storeFeeTokenSymbol}</button
                     >
@@ -161,7 +169,7 @@
                         ></tbody
                     >
                 </table>
-                <button on:click={handleSubmit}>Submit</button>
+                <button on:click={handleSubmit} class="ui yellow button">Submit</button>
             {:else}
                 <h2>Airdrop creation successfull!</h2>
                 <p>Send the amount of token to be airdropped to 0xXXXX</p>

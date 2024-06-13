@@ -1,4 +1,5 @@
 <script>
+    import "semantic-ui-css/semantic.min.css";
     export let title;
     export let address;
     export let balance;
@@ -17,19 +18,26 @@
     };
 </script>
 
-<div class="card">
-    <img src={image} alt={title} />
-    <h2>{title}</h2>
-    <ul>
-        <li>
-            Address: <a href={explorer + address} target="_blank"
-                >{shortenAddress(address)}</a
-            >
-        </li>
-        <li>Balance: {balance}</li>
-        <li>Fee: {fee}</li>
-        <li>Date and time: {time}</li>
-        <li>Owner: {owner}</li>
-    </ul>
-    <p align="center"><button on:click={register}>Register</button></p>
+<div class="ui card">
+    <div class="image">
+        <img src={image} alt={title} />
+    </div>
+    <div class="content">
+        <div class="header">{title}</div>
+        <div class="description">
+            <ul>
+                <li>
+                    Address: <a href={explorer + address} target="_blank"
+                        >{shortenAddress(address)}</a
+                    >
+                </li>
+                <li>Balance: {balance}</li>
+                <li>Fee: {fee}</li>
+                <li>Date and time: {time}</li>
+            </ul>
+        </div>
+        <div class="ui bottom attached button" on:click={register}>Register</div>
+        <div class="extra content">Owner: {owner}</div>
+    </div>
+
 </div>

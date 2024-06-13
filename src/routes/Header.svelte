@@ -96,7 +96,7 @@
 
     const disconnect = () => {
         storeConnected.set(false);
-        buttonText = "Connecter le portefeuille";
+        buttonText = "Connect wallet";
         storeSigner.set(null);
     };
 
