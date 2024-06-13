@@ -6,7 +6,7 @@
         storeFee,
         storeFeeToken,
         storeFeeTokenSymbol,
-    } from "../../store"; // The storeFee variable could be a json object
+    } from "../store"; // The storeFee variable could be a json object
     import factoryJson from "./Factory.json";
     import tokenJson from "./create/ERC20.json";
 
@@ -38,7 +38,7 @@
 <slot></slot>
 
 <style>
-    @import "../../../styles.css";
+    @import "../../styles.css";
 
     :global(html),
     :global(body) {
@@ -57,8 +57,8 @@
     @font-face {
         font-family: "Candara";
         src:
-            url("../../../lib/font/Candara.ttf") format("truetype"),
-            url("../../../lib/font/Candarai.ttf") format("truetype");
+            url("../../lib/font/Candara.ttf") format("truetype"),
+            url("../../lib/font/Candarai.ttf") format("truetype");
     }
 
     .ui,

@@ -7,7 +7,7 @@
         storeConnected,
         storeNetwork,
         storeEth,
-    } from "../store";
+    } from "./store";
     //    import factoryJson from "./factory.json";
 
     // Local state variables
@@ -36,7 +36,7 @@
     };
 
     if ($storeSigner) buttonText = shortenAddress($storeSigner.address);
-    else buttonText = "Connecter le portefeuille";
+    else buttonText = "Connect wallet";
 
     const walletConnect = async (ethereum) => {
         try {
@@ -101,26 +101,25 @@
     };
 
     const aboutAccount = (slug) => {
-        if (slug) goto(`/app/about/${slug.address}`);
-        else goto(`/app/about`);
+        if (slug) goto(`/about/${slug.address}`);
+        else goto(`/about`);
     };
 </script>
 
 <div class="header">
     <ul class="nav-bar">
-        <li><a href="/">General information</a></li>
-        <li><a href="/app">Home</a></li>
-        <li><a href="/app/airdrop/create">Create Airdrop</a></li>
-        <li><a href="/app/airdrop/participate">Register for Airdrop</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/airdrop/create">Create Airdrop</a></li>
+        <li><a href="/airdrop/participate">Register for Airdrop</a></li>
         <li>
             <a href="#" on:click={() => aboutAccount($storeSigner)}>Dashboard</a
             >
         </li>
-        <li><a href="/app/airdrop/contact">Contact</a></li>
+        <li><a href="/airdrop/contact">Contact</a></li>
     </ul>
     <div class="right-side">
         {#if $storeConnected}
-            <button on:click={disconnect}>D&eacute;connecter</button>
+            <button on:click={disconnect}>Disconnect</button>
         {/if}
         <button on:click={openWalletExtension}>{buttonText}</button>
     </div>

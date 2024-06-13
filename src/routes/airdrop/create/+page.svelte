@@ -1,16 +1,16 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
     import { Contract, formatEther, parseEther } from "ethers";
-    import Spinner from "../../../../components/Spinner.svelte";
+    import Spinner from "../../../components/Spinner.svelte";
     import {
         storeSigner,
         storeFee,
         storeFeeToken,
         storeFeeTokenSymbol,
-    } from "../../../store";
+    } from "../../store";
     import factoryJson from "../Factory.json";
     import tokenJson from "./ERC20.json";
-    import Wrong from "../../../../components/Wrong.svelte";
+    import Wrong from "../../../components/Wrong.svelte";
 
     let isLoading = false;
     let tokenContract = "";

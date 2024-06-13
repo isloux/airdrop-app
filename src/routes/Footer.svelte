@@ -1,4 +1,4 @@
-<div class="footer"><h2>Application fabuleuse</h2></div>
+<div class="footer"><h2>BaldG dApp</h2></div>
 
 <style>
     .footer {

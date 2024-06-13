@@ -5,9 +5,9 @@
     import factoryJson from "../Factory.json";
     import airdropJson from "./Airdrop.json";
     //import tokenJson from "../create/ERC20.json";
-    import { storeSigner } from "../../../store";
-    import Card from "../../../../components/Card.svelte";
-    import Wrong from "../../../../components/Wrong.svelte";
+    import { storeSigner } from "../../store";
+    import Card from "../../../components/Card.svelte";
+    import Wrong from "../../../components/Wrong.svelte";
 
     let nAirdrops;
     let addresses = [];
