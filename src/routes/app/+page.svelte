@@ -1,6 +1,6 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
-    import { Contract, UnmanagedSubscriber, formatEther } from "ethers";
+    import { Contract, formatEther } from "ethers";
     import Header from "./Header.svelte";
     import {
         storeSigner,
@@ -32,7 +32,7 @@
     });
 
     const getDatabaseInfo = async () => {
-        const address = "0x474af4CC045689bA0e95D63d6Efbd9Cc2CF7B2aa";
+        const address = "0x42ADF64e3649b06F300442aD7297945672a905da";
         const explorer = "https://sepolia.etherscan.io/token/";
         factory = new Contract(address, factoryJson.abi, $storeSigner);
         nAirdrops = await factory.getNumberOfAirdrops();
