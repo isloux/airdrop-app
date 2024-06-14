@@ -1,5 +1,6 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
+    import { onDestroy } from "svelte";
     import { Contract, formatEther, parseEther } from "ethers";
     import Spinner from "../../../components/Spinner.svelte";
     import {
@@ -22,26 +23,44 @@
     let txHashRef = "";
     let approved = false;
     let submitted = false;
+    let approveButton = "ui yellow disabled button";
+    let feeContract = null;
+    let signer;
+    let userFeeBalance;
+
+    storeSigner.subscribe((value) => {
+        signer = value;
+        if (signer) {
+            feeContract = new Contract($storeFeeToken, tokenJson.abi, signer);
+            feeContract.balanceOf(signer).then((balance) => {
+                if (Number(balance) > 0) approveButton = "ui yellow button";
+                else approveButton = "ui yellow disabled button";
+                userFeeBalance = formatEther(balance);
+            });
+        } else approveButton = "ui yellow disabled button";
+    });
+
+    const unsubscribe = storeSigner.subscribe((value) => {
+        signer = value;
+    });
+
+    onDestroy(() => {
+        unsubscribe();
+    });
 
     const approve = async () => {
         const factoryAddress = "0x42ADF64e3649b06F300442aD7297945672a905da";
         const explorer = "https://sepolia.etherscan.io/tx/";
-        console.log($storeFeeToken, $storeFee);
-        const feeContract = new Contract(
-            $storeFeeToken,
-            tokenJson.abi,
-            $storeSigner,
-        );
+
         // Form submission logic here
         console.log(
             `Form submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
         );
 
         const approvedAmount = await feeContract.allowance(
-            $storeSigner,
+            signer,
             factoryAddress,
         );
-        console.log(approvedAmount, $storeFee);
         if (Number(approvedAmount) < Number($storeFee)) {
             isLoading = true;
             try {
@@ -60,7 +79,7 @@
     const handleSubmit = async () => {
         const address = "0x42ADF64e3649b06F300442aD7297945672a905da";
         const explorer = "https://sepolia.etherscan.io/tx/";
-        const factory = new Contract(address, factoryJson.abi, $storeSigner);
+        const factory = new Contract(address, factoryJson.abi, signer);
         // Form submission logic here
         const dateString = airdropDate + "T" + airdropTime + ":00";
         const date = new Date(dateString);
@@ -104,7 +123,7 @@
                 >
             </p>
         {/if}
-        {#if $storeSigner}
+        {#if signer}
             {#if !approved && !submitted}
                 <form on:submit={approve} class="ui form">
                     <div class="field">
@@ -148,11 +167,12 @@
                         <input type="URL" id="logoURL" bind:value={logoURL} />
                     </div>
 
-                    <button type="submit" class="ui yellow button"
+                    <button type="submit" class={approveButton}
                         >Approve expense of {formatEther($storeFee)}
                         {$storeFeeTokenSymbol}</button
                     >
                 </form>
+                <div class="ui message">Available balance: {userFeeBalance} {$storeFeeTokenSymbol}</div>
             {:else if approved}
                 <p>Fee allowance approved.</p>
                 <h2>Airdrop summary</h2>
@@ -169,7 +189,9 @@
                         ></tbody
                     >
                 </table>
-                <button on:click={handleSubmit} class="ui yellow button">Submit</button>
+                <button on:click={handleSubmit} class="ui yellow button"
+                    >Submit</button
+                >
             {:else}
                 <h2>Airdrop creation successfull!</h2>
                 <p>Send the amount of token to be airdropped to 0xXXXX</p>

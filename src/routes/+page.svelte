@@ -1,18 +1,14 @@
 <script>
     import "semantic-ui-css/semantic.min.css";
-    import { Contract, formatEther } from "ethers";
+    import { formatEther } from "ethers";
     import Header from "./Header.svelte";
     import {
-        storeSigner,
         storeConnected,
         storeNetwork,
         storeEth,
         storeFee,
         storeFeeToken,
-        storeFeeTokenSymbol,
     } from "./store";
-    import factoryJson from "./airdrop/Factory.json";
-    import tokenJson from "./airdrop/create/ERC20.json";
     import { onDestroy, onMount } from "svelte";
     import Wrong from "../components/Wrong.svelte";
 
@@ -23,6 +19,7 @@
     let feeToken;
     let feeTokenURL;
     let connected;
+
     storeConnected.subscribe((value) => {
         connected = value;
     });
@@ -31,33 +28,25 @@
         connected = value;
     });
 
-    const getDatabaseInfo = async () => {
-        const address = "0x42ADF64e3649b06F300442aD7297945672a905da";
-        const explorer = "https://sepolia.etherscan.io/token/";
-        factory = new Contract(address, factoryJson.abi, $storeSigner);
-        nAirdrops = await factory.getNumberOfAirdrops();
-        nAirdrops = Number(nAirdrops);
-        fee = await factory.getFee();
-        storeFee.set(fee);
-        fee = formatEther(fee);
-        feeToken = await factory.getFeeToken();
-        storeFeeToken.set(feeToken);
-        const feeContract = new Contract(feeToken, tokenJson.abi, $storeSigner);
-        const symbol = await feeContract.symbol();
-        storeFeeTokenSymbol.set(symbol);
-        feeTokenURL = explorer + feeToken;
-    };
-
-    onMount(async () => {
-        if ($storeSigner && !fee) await getDatabaseInfo();
+    onMount(() => {
+        if ($storeFee) fee = formatEther($storeFee);
+        else fee = null;
     });
 
     onDestroy(() => {
         unsubscribe();
     });
+
+    const handleUpdate = async (props) => {
+        const explorer = "https://sepolia.etherscan.io/token/";
+        nAirdrops = await props.detail.factory.getNumberOfAirdrops();
+        nAirdrops = Number(nAirdrops);
+        feeTokenURL = explorer + storeFeeToken;
+        fee = formatEther($storeFee);
+    };
 </script>
 
-<Header on:updateParent={getDatabaseInfo} />
+<Header on:updateParent={handleUpdate} />
 
 <div class="main">
     <div class="ui raised very padded text container segment">
@@ -70,8 +59,7 @@
             </p>
             <p>Value: {formatEther($storeEth)}</p>
             <p>
-                <a href="/airdrop/create"><button>Create airdrop</button></a
-                >
+                <a href="/airdrop/create"><button>Create airdrop</button></a>
             </p>
         {/if}
         {#if nAirdrops > 0}

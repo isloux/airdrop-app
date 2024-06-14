@@ -1,24 +1,30 @@
 <script>
     import { goto } from "$app/navigation";
-    import { BrowserProvider } from "ethers";
+    import { BrowserProvider, Contract, formatEther } from "ethers";
     import { onMount, createEventDispatcher } from "svelte";
     import {
         storeSigner,
         storeConnected,
         storeNetwork,
         storeEth,
+        storeFee,
+        storeFeeToken,
+        storeFeeTokenSymbol,
     } from "./store";
-    //    import factoryJson from "./factory.json";
+    import factoryJson from "./airdrop/Factory.json";
+    import tokenJson from "./airdrop/create/ERC20.json";
 
     // Local state variables
     let factory = null;
-    let isLoading = false;
+    let fee = 0;
     let buttonText;
 
     // Parent callback function
     const dispatch = createEventDispatcher();
     const handleClick = () => {
-        dispatch("updateParent");
+        dispatch("updateParent", {
+            factory: factory,
+        });
     };
 
     // Subscribe to the store
@@ -38,12 +44,26 @@
     if ($storeSigner) buttonText = shortenAddress($storeSigner.address);
     else buttonText = "Connect wallet";
 
+    const getDatabaseInfo = async (provider) => {
+        const address = "0x42ADF64e3649b06F300442aD7297945672a905da";
+        factory = new Contract(address, factoryJson.abi, provider);
+        fee = await factory.getFee();
+        storeFee.set(fee);
+        fee = formatEther(fee);
+        const feeToken = await factory.getFeeToken();
+        storeFeeToken.set(feeToken);
+        const feeContract = new Contract(feeToken, tokenJson.abi, provider);
+        const symbol = await feeContract.symbol();
+        storeFeeTokenSymbol.set(symbol);
+    };
+
     const walletConnect = async (ethereum) => {
         try {
             const provider = new BrowserProvider(ethereum);
+            await getDatabaseInfo(provider);
             const network = await provider.getNetwork();
             storeNetwork.set(network.chainId);
-            const accounts = await provider.send("eth_requestAccounts", []);
+            // const accounts = await provider.send("eth_requestAccounts", []);
             const signer = await provider.getSigner();
             // const address = "0xb568A9A4F52523Da9032f9542324040E8c808613";
             //factory = new Contract(address, factoryJson.abi, signer);
@@ -79,11 +99,11 @@
                 if (accounts.length === 0) {
                     // MetaMask is locked or the user has not connected any accounts
                     console.log("Please connect to MetaMask.");
-                } else if (accounts[0] !== $storeSigner.address) {
-                    const wConnect = walletConnect(ethereum);
-                    storeConnected.set(wConnect);
-                    // Update your application state or UI here
-                }
+                } else if ($storeSigner)
+                    if (accounts[0] !== $storeSigner.address) {
+                        const wConnect = walletConnect(ethereum);
+                        storeConnected.set(wConnect);
+                    }
             });
             ethereum.on("chainChanged", () => {
                 const wConnect = walletConnect(ethereum);
@@ -98,6 +118,7 @@
         storeConnected.set(false);
         buttonText = "Connect wallet";
         storeSigner.set(null);
+        storeFee.set(null);
     };
 
     const aboutAccount = (slug) => {
