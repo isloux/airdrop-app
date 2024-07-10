@@ -37,7 +37,10 @@
 }
 
 .main {
-  background-color: blanchedalmond;
+  /* background-color: blanchedalmond; */
+  background-image: url("./assets/9.png");
+  background-size: cover;
+  background-position: center;
   flex-grow: 1;
   /* This makes the main content area expand to fill the available space */
   padding: 15px;

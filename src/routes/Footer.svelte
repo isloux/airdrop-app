@@ -1,4 +1,5 @@
-<div class="footer"><h2>BaldG dApp</h2></div>
+<div class="footer"><h2><img src="/BaldG.png" alt="BaldG logo" height="25" />&nbsp;
+    BaldG dApp</h2></div>
 
 <style>
     .footer {
