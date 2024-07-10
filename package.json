@@ -24,6 +24,7 @@
 	"type": "module",
 	"dependencies": {
 		"ethers": "^6.11.1",
-		"semantic-ui-css": "^2.5.0"
+		"semantic-ui-css": "^2.5.0",
+		"svelte-adapter-azure-swa": "^0.20.0"
 	}
 }
