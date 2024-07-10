@@ -14,7 +14,7 @@
     import Wrong from "../../../components/Wrong.svelte";
 
     let isLoading = false;
-    let tokenContract = "";
+    let tokenAddress = "";
     let regitrationFee = 0;
     let airdropDate = "";
     let airdropTime = "";
@@ -52,28 +52,31 @@
         const factoryAddress = "0x42ADF64e3649b06F300442aD7297945672a905da";
         const explorer = "https://sepolia.etherscan.io/tx/";
 
-        // Form submission logic here
-        console.log(
-            `Form submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}!`,
-        );
-
-        const approvedAmount = await feeContract.allowance(
-            signer,
-            factoryAddress,
-        );
-        if (Number(approvedAmount) < Number($storeFee)) {
-            isLoading = true;
-            try {
-                const tx = await feeContract.approve(factoryAddress, $storeFee);
-                const receipt = await tx.wait();
-                txHash = receipt.hash;
-                txHashRef = explorer + txHash;
-                approved = true;
-            } catch (error) {
-                console.log(`Transaction rejected: ${error}`);
-            }
-            isLoading = false;
-        } else approved = true;
+        if (tokenAddress.length === 42) {
+            console.log(
+                `Form submitted with ${tokenAddress}, ${airdropDate}, ${airdropTime}!`,
+            );
+            const approvedAmount = await feeContract.allowance(
+                signer,
+                factoryAddress,
+            );
+            if (Number(approvedAmount) < Number($storeFee)) {
+                isLoading = true;
+                try {
+                    const tx = await feeContract.approve(
+                        factoryAddress,
+                        $storeFee,
+                    );
+                    const receipt = await tx.wait();
+                    txHash = receipt.hash;
+                    txHashRef = explorer + txHash;
+                    approved = true;
+                } catch (error) {
+                    console.log(`Transaction rejected: ${error}`);
+                }
+                isLoading = false;
+            } else approved = true;
+        } else alert("Invalid address");
     };
 
     const handleSubmit = async () => {
@@ -87,12 +90,12 @@
         console.log(unixTime); // This is the local time
         const regitrationFeeWei = parseEther(regitrationFee.toString());
         console.log(
-            `Airdrop creation submitted with ${tokenContract}, ${airdropDate}, ${airdropTime}, ${regitrationFeeWei}, ${logoURL}!`,
+            `Airdrop creation submitted with ${tokenAddress}, ${airdropDate}, ${airdropTime}, ${regitrationFeeWei}, ${logoURL}!`,
         );
         isLoading = true;
         try {
             const tx = await factory.createNewAirdrop(
-                tokenContract,
+                tokenAddress,
                 unixTime,
                 regitrationFeeWei,
                 logoURL,
@@ -127,11 +130,11 @@
             {#if !approved && !submitted}
                 <form on:submit={approve} class="ui form">
                     <div class="field">
-                        <label for="tokenContract">Token contract:</label>
+                        <label for="tokenAddress">Token contract:</label>
                         <input
                             type="text"
-                            id="tokenContract"
-                            bind:value={tokenContract}
+                            id="tokenAddress"
+                            bind:value={tokenAddress}
                         />
                     </div>
 
@@ -140,8 +143,19 @@
                         <input
                             type="number"
                             id="regitrationFee"
+                            step="0.000000000000000001"
                             bind:value={regitrationFee}
                         />
+                        <script>
+                            const inputFee =
+                                document.getElementById("regitrationFee");
+                            inputFee.addEventListener("input", () => {
+                                const value = parseFloat(inputFee.value);
+                                if (isNaN(value) || value <= 0) {
+                                    inputFee.value = "";
+                                }
+                            });
+                        </script>
                     </div>
 
                     <div class="field">
@@ -172,14 +186,17 @@
                         {$storeFeeTokenSymbol}</button
                     >
                 </form>
-                <div class="ui message">Available balance: {userFeeBalance} {$storeFeeTokenSymbol}</div>
+                <div class="ui message">
+                    Available balance: {userFeeBalance}
+                    {$storeFeeTokenSymbol}
+                </div>
             {:else if approved}
                 <p>Fee allowance approved.</p>
                 <h2>Airdrop summary</h2>
                 <table>
                     <thead><tr><th>Key</th><th>Value</th></tr></thead>
                     <tbody
-                        ><tr><th>Token address</th><th>{tokenContract}</th></tr>
+                        ><tr><th>Token address</th><th>{tokenAddress}</th></tr>
                         <tr><th>Date</th><th>{airdropDate}</th></tr>
                         <tr><th>Time</th><th>{airdropTime}</th></tr>
                         <tr><th>Logo location</th><th>{logoURL}</th></tr>
