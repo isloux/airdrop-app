@@ -137,6 +137,7 @@
             >
         </li>
         <li><a href="/airdrop/contact">Contact</a></li>
+        <li><a href="https://baldg.gitbook.io/app">Documentation</a></li>
     </ul>
     <div class="right-side">
         {#if $storeConnected}
